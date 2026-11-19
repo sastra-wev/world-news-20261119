@@ -4,8 +4,9 @@
 Deterministic, offline front-page generator for the make.fun competition
 news-image-20261119 ("Sum up 19 November's world news in one image").
 
-Running `python3 main.py` writes `frontpage.png` (1024x1024) into the
-working directory. No network, no randomness, no wall-clock reads: the
+Running `python3 main.py` writes `entry.png` (1024x1024) into
+$MAKEFUN_OUTPUT_DIR (default /output). No network, no randomness, no
+wall-clock reads: the
 same code always produces the same image.
 """
 
@@ -395,8 +396,11 @@ def main():
     lines = wrap(draw, ticker, sans(11), CONTENT_W - 130)
     draw_lines(draw, MARGIN + 118, foot_y0 + 8, lines, sans(11), (238, 234, 222), 15)
 
-    img.save("frontpage.png", optimize=True)
-    print("wrote frontpage.png", os.path.getsize("frontpage.png"), "bytes")
+    out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
+    os.makedirs(out_dir, exist_ok=True)
+    out_path = os.path.join(out_dir, "entry.png")
+    img.save(out_path, optimize=True)
+    print("wrote", out_path, os.path.getsize(out_path), "bytes")
 
 
 if __name__ == "__main__":
